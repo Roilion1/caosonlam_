@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{21E179B4-E6D0-46D2-A0E1-65803504871D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>EX01</RootNamespace>
+    <AssemblyName>EX01</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cau00.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau00.Designer.cs">
+      <DependentUpon>Cau00.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau01.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau01.Designer.cs">
+      <DependentUpon>Cau01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau02.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau02.Designer.cs">
+      <DependentUpon>Cau02.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau05.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau05.Designer.cs">
+      <DependentUpon>Cau05.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau06.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau06.Designer.cs">
+      <DependentUpon>Cau06.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau07.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau07.Designer.cs">
+      <DependentUpon>Cau07.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau08.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau08.Designer.cs">
+      <DependentUpon>Cau08.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau09.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau09.Designer.cs">
+      <DependentUpon>Cau09.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau10.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau10.Designer.cs">
+      <DependentUpon>Cau10.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau11.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau11.Designer.cs">
+      <DependentUpon>Cau11.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau12.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau12.Designer.cs">
+      <DependentUpon>Cau12.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau13.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau13.Designer.cs">
+      <DependentUpon>Cau13.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau14.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau14.Designer.cs">
+      <DependentUpon>Cau14.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau15.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau15.Designer.cs">
+      <DependentUpon>Cau15.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau16.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau16.Designer.cs">
+      <DependentUpon>Cau16.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau17.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau17.Designer.cs">
+      <DependentUpon>Cau17.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau18.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau18.Designer.cs">
+      <DependentUpon>Cau18.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau19.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau19.Designer.cs">
+      <DependentUpon>Cau19.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cau20.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cau20.Designer.cs">
+      <DependentUpon>Cau20.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Employee.cs" />
+    <Compile Include="Faculty.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InfoWindows.cs" />
+    <Compile Include="InfoWindows02.cs" />
+    <Compile Include="Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Song.cs" />
+    <EmbeddedResource Include="Cau00.resx">
+      <DependentUpon>Cau00.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau01.resx">
+      <DependentUpon>Cau01.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau02.resx">
+      <DependentUpon>Cau02.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau05.resx">
+      <DependentUpon>Cau05.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau06.resx">
+      <DependentUpon>Cau06.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau07.resx">
+      <DependentUpon>Cau07.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau08.resx">
+      <DependentUpon>Cau08.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau09.resx">
+      <DependentUpon>Cau09.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau10.resx">
+      <DependentUpon>Cau10.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau11.resx">
+      <DependentUpon>Cau11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau12.resx">
+      <DependentUpon>Cau12.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau13.resx">
+      <DependentUpon>Cau13.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau14.resx">
+      <DependentUpon>Cau14.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau15.resx">
+      <DependentUpon>Cau15.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau16.resx">
+      <DependentUpon>Cau16.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau17.resx">
+      <DependentUpon>Cau17.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau18.resx">
+      <DependentUpon>Cau18.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau19.resx">
+      <DependentUpon>Cau19.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cau20.resx">
+      <DependentUpon>Cau20.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="System\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
