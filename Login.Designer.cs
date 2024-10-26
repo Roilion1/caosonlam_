@@ -44,47 +44,47 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 16);
             this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
+            this.label1.Text = "Name";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(87, 197);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 16);
+            this.label2.Size = new System.Drawing.Size(71, 16);
             this.label2.TabIndex = 0;
-            this.label2.Text = "label1";
+            this.label2.Text = "PassWord";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(328, 51);
+            this.label3.Location = new System.Drawing.Point(191, 47);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 16);
+            this.label3.Size = new System.Drawing.Size(40, 16);
             this.label3.TabIndex = 0;
-            this.label3.Text = "label1";
+            this.label3.Text = "Login";
             // 
             // tbUserName
             // 
             this.tbUserName.Location = new System.Drawing.Point(183, 112);
             this.tbUserName.Name = "tbUserName";
-            this.tbUserName.Size = new System.Drawing.Size(100, 22);
+            this.tbUserName.Size = new System.Drawing.Size(185, 22);
             this.tbUserName.TabIndex = 1;
             // 
             // tbPassWord
             // 
             this.tbPassWord.Location = new System.Drawing.Point(183, 191);
             this.tbPassWord.Name = "tbPassWord";
-            this.tbPassWord.Size = new System.Drawing.Size(100, 22);
+            this.tbPassWord.Size = new System.Drawing.Size(185, 22);
             this.tbPassWord.TabIndex = 1;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(287, 259);
+            this.button1.Location = new System.Drawing.Point(153, 262);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(122, 44);
             this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
+            this.button1.Text = "Đăng nhập";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -100,7 +100,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(452, 450);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tbPassWord);
             this.Controls.Add(this.tbUserName);

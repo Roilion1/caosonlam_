@@ -22,7 +22,7 @@ namespace EX01
             string password = tbPassWord.Text;
 
             // Kiểm tra thông tin đăng nhập (ví dụ đơn giản)
-            if (username == "CaoSonLam" && password == "2122110089")
+            if (username == "caosonlam" && password == "123")
             {
                 // Mở form chính và ẩn form đăng nhập
                 Form1 mainForm = new Form1();
