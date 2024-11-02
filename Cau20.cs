@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
+using System.Data.SqlClient;
 
 namespace EX01
 {
@@ -18,7 +14,35 @@ namespace EX01
         {
             InitializeComponent();
             this.Text = "Quản Lý Sinh Viên";
+
+            // Đăng ký sự kiện Resize
+            this.Resize += new EventHandler(Cau20_Resize);
+
+            // Tạo DataGridViewImageColumn và thiết lập các thuộc tính cần thiết
+            var imageColumn = new DataGridViewImageColumn
+            {
+                Name = "Image",
+                HeaderText = "Image",
+                Width = 120, // Chiều rộng cho khung ảnh
+                ImageLayout = DataGridViewImageCellLayout.Zoom // điều chỉnh kích thước ảnh để vừa khung
+            };
+
+            // Thêm cột hình ảnh vào DataGridView
+            dgvCustomer.Columns.Add(imageColumn);
+
+            //  lưu đường dẫn hình ảnh
+            dgvCustomer.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "ImagePath",
+                HeaderText = "Image Path",
+                Visible = false
+            });
+
+            dgvCustomer.RowTemplate.Height = 80; // Chiều cao phù hợp với khung ảnh 
+
+            LoadDataGridView();
         }
+
         private void btNew_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(tbId.Text) ||
@@ -29,70 +53,82 @@ namespace EX01
                 return;
             }
 
-            if(!long.TryParse(tbId.Text, out _) || tbId.Text.Length > 10)
+            if (!long.TryParse(tbId.Text, out _) || tbId.Text.Length > 10)
             {
                 MessageBox.Show("Nhập lại mã số, không chứa chữ cái và không vượt quá 10.");
                 return;
             }
 
-            if (!int.TryParse(tbAge.Text, out int age) || age < 18 || age >50)
+            if (!int.TryParse(tbAge.Text, out int age) || age < 18 || age > 50)
             {
                 MessageBox.Show("Nhập lại tuổi.");
                 return;
             }
-            string gender = rbNam.Checked ? "Nam" : "Nữ";
 
-            dgvCustomer.Rows.Add(tbId.Text, tbName.Text, tbAge.Text, gender);
+            string gender = rbNam.Checked ? "Nam" : "Nu";
+            string imagePath = pbImage.ImageLocation ?? string.Empty;
+
+            byte[] imageBytes = null;
+            if (pbImage.Image != null)
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    pbImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    imageBytes = ms.ToArray();
+                }
+            }
+
+            using (SqlConnection connection = new SqlConnection("Data Source=ROILION; Initial Catalog=sale; User Id=sa; Password=sa"))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("INSERT INTO Customer (id, name, age, gender, image) VALUES (@id, @name, @age, @gender, @image)", connection))
+                {
+                    command.Parameters.Add(new SqlParameter("@id", tbId.Text));
+                    command.Parameters.Add(new SqlParameter("@name", tbName.Text));
+                    command.Parameters.Add(new SqlParameter("@age", tbAge.Text));
+                    command.Parameters.Add(new SqlParameter("@gender", gender));
+                    command.Parameters.Add(new SqlParameter("@image", imageBytes != null ? (object)imageBytes : DBNull.Value));
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            System.Drawing.Image image = null;
+            if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+            {
+                image = System.Drawing.Image.FromFile(imagePath);
+            }
+
+            dgvCustomer.Rows.Add(tbId.Text, tbName.Text, tbAge.Text, gender, image);
+            LoadDataGridView(); 
         }
 
         private void btDelete_Click(object sender, EventArgs e)
         {
-            if (dgvCustomer.Rows.Count == 0 || (dgvCustomer.Rows.Count == 1 && dgvCustomer.Rows[0].IsNewRow))
+            if (dgvCustomer.CurrentRow == null || dgvCustomer.CurrentRow.IsNewRow)
             {
-                MessageBox.Show("Không có dữ liệu để xóa. Vui lòng thêm thông tin trước.");
+                MessageBox.Show("Không có hàng nào để xóa.");
                 return;
             }
 
-            // Tạo danh sách chứa các chỉ mục của hàng rỗng cần xóa
-            List<int> toBeDeleted = new List<int>();
+            int idx = dgvCustomer.CurrentCell.RowIndex;
+            string idToDelete = dgvCustomer.Rows[idx].Cells[0].Value.ToString();
 
-            // Kiểm tra từng hàng để tìm hàng rỗng
-            for (int i = 0; i < dgvCustomer.Rows.Count - 1; i++) // -1 vì hàng thêm mới
+            using (SqlConnection connection = new SqlConnection("Data Source=ROILION; Initial Catalog=sale; User Id=sa; Password=sa"))
             {
-                bool empty = true;
-                for (int j = 0; j < dgvCustomer.Columns.Count; j++)
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("DELETE FROM Customer WHERE id = @id", connection))
                 {
-                    if (dgvCustomer.Rows[i].Cells[j].Value != null && dgvCustomer.Rows[i].Cells[j].Value.ToString() != "")
-                    {
-                        empty = false;
-                        break;
-                    }
-                }
-                if (empty)
-                {
-                    toBeDeleted.Add(i); 
+                    command.Parameters.Add(new SqlParameter("@id", idToDelete));
+                    command.ExecuteNonQuery();
                 }
             }
 
-            // Xóa các hàng rỗng từ cuối lên đầu để tránh lỗi chỉ mục
-            for (int i = toBeDeleted.Count - 1; i >= 0; i--)
-            {
-                dgvCustomer.Rows.RemoveAt(toBeDeleted[i]);
-            }
-
-            // Kiểm tra và xóa hàng hiện tại
-            if (dgvCustomer.CurrentRow != null && !dgvCustomer.CurrentRow.IsNewRow)
-            {
-                int idx = dgvCustomer.CurrentCell.RowIndex;
-                dgvCustomer.Rows.RemoveAt(idx);
-            }
+            dgvCustomer.Rows.RemoveAt(idx);
+            LoadDataGridView();
         }
-
 
         private void btEdit_Click(object sender, EventArgs e)
         {
-
-            // Kiểm tra nếu không có hàng nào được chọn
             if (dgvCustomer.CurrentRow == null || dgvCustomer.CurrentRow.IsNewRow)
             {
                 MessageBox.Show("Vui lòng chọn hàng cần sửa.");
@@ -101,28 +137,81 @@ namespace EX01
 
             int idx = dgvCustomer.CurrentCell.RowIndex;
 
-            // Kiểm tra điều kiện cho ID (chỉ nhận số và không quá 10 chữ số)
-            if (!long.TryParse(tbId.Text, out _) || tbId.Text.Length > 10)
+            if (!long.TryParse(tbId.Text, out long id) || tbId.Text.Length > 19) // 19 là chiều dài tối đa cho bigint
             {
-                MessageBox.Show("ID chỉ được chứa số và không quá 10 chữ số.");
+                MessageBox.Show("ID chỉ được chứa số và không quá 19 ký tự.");
                 return;
             }
 
-            // Kiểm tra điều kiện cho Age (tuổi từ 18 đến 50)
             if (!int.TryParse(tbAge.Text, out int age) || age < 18 || age > 50)
             {
                 MessageBox.Show("Tuổi phải nằm trong khoảng từ 18 đến 50.");
                 return;
             }
 
-            // Xác định giới tính dựa trên RadioButton đã chọn
-            string gender = rbNam.Checked ? "Nam" : "Nữ";
+            string gender = rbNam.Checked ? "Nam" : "Nu";
+            string imagePath = pbImage.ImageLocation ?? string.Empty;
+            byte[] imageBytes = null;
 
-            dgvCustomer.Rows[idx].Cells[0].Value = tbId.Text;
+            // Chuyển đổi hình ảnh thành mảng byte nếu có hình ảnh
+            if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+            {
+                using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (BinaryReader br = new BinaryReader(fs))
+                    {
+                        imageBytes = br.ReadBytes((int)fs.Length);
+                    }
+                }
+            }
+
+            using (SqlConnection connection = new SqlConnection("Data Source=ROILION; Initial Catalog=sale; User Id=sa; Password=sa"))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE customer SET name = @name, age = @age, gender = @gender, image = @image WHERE id = @id", connection))
+                {
+                    command.Parameters.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
+                    command.Parameters.Add(new SqlParameter("@name", SqlDbType.NVarChar) { Value = tbName.Text });
+                    command.Parameters.Add(new SqlParameter("@age", SqlDbType.Int) { Value = age });
+                    command.Parameters.Add(new SqlParameter("@gender", SqlDbType.VarChar) { Value = gender });
+                    command.Parameters.Add(new SqlParameter("@image", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value });
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        MessageBox.Show($"Lỗi SQL: {ex.Message}");
+                        return;
+                    }
+                }
+            }
+
+            // Cập nhật DataGridView
+            dgvCustomer.Rows[idx].Cells[0].Value = id;
             dgvCustomer.Rows[idx].Cells[1].Value = tbName.Text;
             dgvCustomer.Rows[idx].Cells[2].Value = tbAge.Text;
             dgvCustomer.Rows[idx].Cells[3].Value = gender;
+
+            // Cập nhật hình ảnh
+            if (imageBytes != null)
+            {
+                using (MemoryStream ms = new MemoryStream(imageBytes))
+                {
+                    dgvCustomer.Rows[idx].Cells[4].Value = System.Drawing.Image.FromStream(ms);
+                }
+            }
+            else
+            {
+                dgvCustomer.Rows[idx].Cells[4].Value = null;
+            }
+
+            LoadDataGridView();
         }
+
+
+
         private void btExit_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -134,35 +223,88 @@ namespace EX01
             {
                 int idx = e.RowIndex;
 
-                if (dgvCustomer.Rows[idx].Cells[0].Value != null)
-                {
-                    tbId.Text = dgvCustomer.Rows[idx].Cells[0].Value.ToString();
-                }
-                else
-                {
-                    tbId.Text = string.Empty;
-                }
-
-                if (dgvCustomer.Rows[idx].Cells[1].Value != null)
-                {
-                    tbName.Text = dgvCustomer.Rows[idx].Cells[1].Value.ToString();
-                }
-                else
-                {
-                    tbName.Text = string.Empty;
-                }
-                if (dgvCustomer.Rows[idx].Cells[2].Value != null)
-                {
-                    tbAge.Text = dgvCustomer.Rows[idx].Cells[2].Value.ToString();
-                }
-                else
-                {
-                    tbAge.Text = string.Empty;
-                }
+                tbId.Text = dgvCustomer.Rows[idx].Cells[0].Value?.ToString() ?? string.Empty;
+                tbName.Text = dgvCustomer.Rows[idx].Cells[1].Value?.ToString() ?? string.Empty;
+                tbAge.Text = dgvCustomer.Rows[idx].Cells[2].Value?.ToString() ?? string.Empty;
 
                 string gender = dgvCustomer.Rows[idx].Cells[3].Value?.ToString();
                 rbNam.Checked = gender == "Nam";
                 rbNu.Checked = gender == "Nữ";
+
+                string imagePath = dgvCustomer.Rows[idx].Cells["ImagePath"].Value?.ToString();
+                if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+                {
+                    pbImage.ImageLocation = imagePath;
+                }
+                else
+                {
+                    pbImage.Image = null; 
+                }
+            }
+        }
+
+        private void btFile_Click(object sender, EventArgs e)
+        {
+            pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Title = "Open Image";
+            dlg.Filter = "JPEG files (*.jpg)|*.jpg";
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                pbImage.ImageLocation = dlg.FileName;
+            }
+        }
+
+        private void LoadDataGridView()
+        {
+            dgvCustomer.Rows.Clear();
+
+            using (SqlConnection connection = new SqlConnection("Data Source=ROILION;Initial Catalog=sale;User Id=sa; Password=sa"))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT id, name, age, gender, image FROM Customer", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.GetString(1);
+                            int age = reader.GetInt32(2);
+                            string gender = reader.GetString(3);
+                            byte[] imageData = reader["image"] as byte[];
+
+                            System.Drawing.Image image = null;
+                            if (imageData != null)
+                            {
+                                using (MemoryStream ms = new MemoryStream(imageData))
+                                {
+                                    image = System.Drawing.Image.FromStream(ms);
+                                }
+                            }
+
+                            dgvCustomer.Rows.Add(id, name, age, gender, image);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btRead_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection("Data Source=ROILION; Initial Catalog=sale; User Id=sa; Password=sa"))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Customer", conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        dgvCustomer.Rows.Add(reader.GetInt32(0), reader.GetString(1));
+                    }
+                }
+                conn.Close();
             }
         }
 
@@ -170,7 +312,7 @@ namespace EX01
         {
             if (rbNam.Checked)
             {
-                rbNu.Checked = false; 
+                rbNu.Checked = false;
             }
         }
 
@@ -178,23 +320,76 @@ namespace EX01
         {
             if (rbNu.Checked)
             {
-                rbNam.Checked = false; 
+                rbNam.Checked = false;
             }
         }
 
+        private void btSearchById_Click(object sender, EventArgs e)
+        {
+            string id = tbSearch.Text;
+            List<CustomerBEL> result = SearchById(id);
+            DisplaySearchResults(result);
+        }
 
+        private List<CustomerBEL> SearchById(string id)
+        {
+            List<CustomerBEL> results = new List<CustomerBEL>();
 
-        //private void btFile_Click(object sender, EventArgs e)
-        //{
-        //    pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
-        //    OpenFileDialog dlg = new OpenFileDialog();
-        //    dlg.Title = "Open Image";
-        //    dlg.Filter = "JPEG files (*.jpg)|*.jpg";
-        //    if (dlg.ShowDialog() == DialogResult.OK)
-        //    {
-        //        pbImage.ImageLocation = dlg.FileName;
-        //    }
-        //}
+            using (SqlConnection connection = new SqlConnection("Data Source=ROILION; Initial Catalog=sale; User Id=sa; Password=sa"))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Customer WHERE id = @id", connection))
+                {
+                    command.Parameters.Add(new SqlParameter("@id", id));
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CustomerBEL customer = new CustomerBEL
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                Age = reader.GetInt32(2),
+                                Gender = reader.GetString(3)
+                            };
 
+                            if (!reader.IsDBNull(4))
+                            {
+                                byte[] imageData = (byte[])reader["image"];
+                                using (MemoryStream ms = new MemoryStream(imageData))
+                                {
+                                    customer.Image = System.Drawing.Image.FromStream(ms);
+                                }
+                            }
+
+                            results.Add(customer);
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+
+        private void DisplaySearchResults(List<CustomerBEL> customers)
+        {
+            dgvCustomer.Rows.Clear();
+            foreach (CustomerBEL customer in customers)
+            {
+                dgvCustomer.Rows.Add(customer.Id, customer.Name, customer.Age, customer.Gender, customer.Image);
+            }
+        }
+
+        private void btExitSearch_Click(object sender, EventArgs e)
+        {
+            tbSearch.Clear(); 
+            LoadDataGridView(); 
+        }
+
+        private void Cau20_Resize(object sender, EventArgs e)
+        {
+            // Thay đổi kích thước của DataGridView dựa trên kích thước mới của Form
+            dgvCustomer.Width = this.ClientSize.Width - 20; // Chỉnh khoảng cách cho phù hợp
+            dgvCustomer.Height = this.ClientSize.Height - 100; // Chỉnh chiều cao cho phù hợp
+        }
     }
 }

@@ -160,6 +160,16 @@
     <Compile Include="Cau20.Designer.cs">
       <DependentUpon>Cau20.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomerBAL.cs" />
+    <Compile Include="CustomerBEL.cs" />
+    <Compile Include="CustomerDAL.cs" />
+    <Compile Include="CustomerGUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomerGUI.Designer.cs">
+      <DependentUpon>CustomerGUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBConnection.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="Faculty.cs" />
     <Compile Include="Form1.cs">
